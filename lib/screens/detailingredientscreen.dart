@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:mealweek/models/mealhasingredient.dart';
 
 class DetailIngredientScreen extends StatelessWidget {
-  const DetailIngredientScreen({Key? key}) : super(key: key);
+  const DetailIngredientScreen({Key? key, required this.mealHasIngredient})
+      : super(key: key);
+
+  final MealHasIngredient mealHasIngredient;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Detail"),
+        title: Text("Detail: " + mealHasIngredient.ingredient.ingredientName),
       ),
       body: SizedBox.expand(
         child: Column(
@@ -15,7 +19,7 @@ class DetailIngredientScreen extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.all(15.0),
               child: Hero(
-                tag: "2", //TODO: Change tag when implement multiple ingredient
+                tag: mealHasIngredient,
                 child: CircleAvatar(
                   radius: 90,
                   child: Image.asset("assets/icons/grocery.png"),
@@ -25,7 +29,7 @@ class DetailIngredientScreen extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.all(15.0),
               child: Text(
-                "Pate".toUpperCase(),
+                mealHasIngredient.ingredient.ingredientName.toUpperCase(),
                 style: const TextStyle(fontSize: 30),
               ),
             ),

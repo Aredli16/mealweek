@@ -67,6 +67,7 @@ class DetailScreen extends StatelessWidget {
                                     .data![index].ingredient.ingredientName),
                                 subtitle: Text("Quantité: " +
                                     snapshot.data![index].quantity.toString() +
+                                    " " +
                                     snapshot.data![index].unit.unitType),
                                 trailing: IconButton(
                                   onPressed: null,

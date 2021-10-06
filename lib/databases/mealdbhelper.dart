@@ -112,13 +112,13 @@ class MealDBHelper {
   /// ```
   /// Return `mealID` given by database if no problem.
   ///
-  /// If problem return `-1`
+  /// If [meal] was on also on database, return the id of existing [meal]
   Future<int> insertMeal(Meal meal) async {
     final Database db = await database;
     try {
       return await db.insert("meal", meal.toMap());
     } catch (e) {
-      return -1;
+      return getIdMealByName(meal.mealName);
     }
   }
 
@@ -146,6 +146,21 @@ class MealDBHelper {
     return Meal.fromMap(response[0]);
   }
 
+  /// Get a meal by his name
+  /// ```
+  ///     MealDBHelper.instance.getIdMealByName("MealName");
+  /// ```
+  /// Return the first ID of meal where the name correspond to [name]
+  ///
+  /// Be careful with case sensitive
+  Future<int> getIdMealByName(String name) async {
+    final Database db = await database;
+    List<Map<String, dynamic>> response =
+        await db.query("meal", where: "mealName = ?", whereArgs: [name]);
+    Meal mealFound = Meal.fromMap(response[0]);
+    return mealFound.mealID;
+  }
+
   /// Insert an [Ingredient].
   ///
   /// Insert an ingredient map define in `Ingredient` class.
@@ -157,13 +172,13 @@ class MealDBHelper {
   /// ```
   /// Return the `ingredientID` given by database if no problem.
   ///
-  /// If problem return `-1`
+  /// If [ingredient] was on also on database, return the id of existing [ingredient]
   Future<int> insertIngredient(Ingredient ingredient) async {
     final Database db = await database;
     try {
       return await db.insert("ingredient", ingredient.toMap());
     } catch (e) {
-      return -1;
+      return getIdIngredientByName(ingredient.ingredientName);
     }
   }
 
@@ -191,6 +206,21 @@ class MealDBHelper {
     return Ingredient.fromMap(response[0]);
   }
 
+  /// Get an ingredient by his name
+  /// ```
+  ///     MealDBHelper.instance.getIdIngredientByName("IngredientName");
+  /// ```
+  /// Return the first ID of ingredient where the name correspond to [name]
+  ///
+  /// Be careful with case sensitive
+  Future<int> getIdIngredientByName(String name) async {
+    final Database db = await database;
+    List<Map<String, dynamic>> response = await db
+        .query("ingredient", where: "ingredientName = ?", whereArgs: [name]);
+    Ingredient ingredientFound = Ingredient.fromMap(response[0]);
+    return ingredientFound.ingredientID;
+  }
+
   /// Insert an [Unit].
   ///
   /// Insert an unit map define in `Unit` class.
@@ -202,13 +232,13 @@ class MealDBHelper {
   /// ```
   /// Return the `unitID` given by database if no problem.
   ///
-  /// If problem return `-1`
+  /// If [unit] was on also on database, return the id of existing [unit]
   Future<int> insertUnit(Unit unit) async {
     final Database db = await database;
     try {
       return await db.insert("unit", unit.toMap());
     } catch (e) {
-      return -1;
+      return getIdUnitByType(unit.unitType);
     }
   }
 
@@ -236,18 +266,67 @@ class MealDBHelper {
     return Unit.fromMap(response[0]);
   }
 
+  /// Get an unit by his type
+  /// ```
+  ///     MealDBHelper.instance.getIdUnitByType("IngredientName");
+  /// ```
+  /// Return the first ID of unit where the type correspond to [type]
+  ///
+  /// Be careful with case sensitive
+  Future<int> getIdUnitByType(String type) async {
+    final Database db = await database;
+    List<Map<String, dynamic>> response =
+        await db.query("unit", where: "unitType = ?", whereArgs: [type]);
+    Unit unitFound = Unit.fromMap(response[0]);
+    return unitFound.unitID;
+  }
+
   /// Insert the relationship Meal-Ingredient-Unit.
   ///
   /// Before insert, need to verify if the Meal/Ingredient/Unit is on the database.
   /// Check if the `ID = 0`. If `ID = 0`, that corresponds to default ID given by classes.
   ///
+  /// ```
+  ///     MealDBHelper.instance.inserMealHasIngredient(MealHasIngredient mealHasIngredient);
+  /// ```
+  ///
   /// After, inserting data into meal_has_ingredient table
+  @Deprecated("Long to write")
   Future<int> insertMealHasIngredient(
       MealHasIngredient mealHasIngredient) async {
     if (mealHasIngredient.meal.mealID == 0 &&
         mealHasIngredient.ingredient.ingredientID == 0 &&
         mealHasIngredient.unit.unitID == 0) return -1;
     final Database db = await database;
+    try {
+      return await db.insert("meal_has_ingredient", mealHasIngredient.toMap());
+    } catch (e) {
+      return -1;
+    }
+  }
+
+  /// Insert the relationship Meal-Ingredient-Unit.
+  ///
+  /// Before insert, need to verify if the Meal/Ingredient/Unit is on the database.
+  /// Check if the `ID = 0`. If `ID = 0`, that corresponds to default ID given by classes.
+  ///
+  ///```
+  ///     MealDBHelper.instance.inserMealHasIngredientManual(1, 1, 1, 500);
+  /// ```
+  ///
+  /// After create a manual new MealHasIngredient Object with different [ID]
+  ///
+  /// The name are ignored because in the relationship table, we just have [ID]
+  Future<int> insertMealHasIngredientManual(
+      int mealID, int ingredientID, int unitID, int quantity) async {
+    if (mealID == 0 && ingredientID == 0 && unitID == 0) return -1;
+    final Database db = await database;
+    MealHasIngredient mealHasIngredient = MealHasIngredient(
+        meal: Meal(mealID: mealID, mealName: "null"),
+        ingredient:
+            Ingredient(ingredientID: ingredientID, ingredientName: "null"),
+        quantity: quantity,
+        unit: Unit(unitID: unitID, unitType: "null"));
     try {
       return await db.insert("meal_has_ingredient", mealHasIngredient.toMap());
     } catch (e) {

@@ -9,7 +9,8 @@ import 'package:mealweek/screens/detailingredientscreen.dart';
 class DetailScreen extends StatelessWidget {
   const DetailScreen({Key? key, required this.meal}) : super(key: key);
 
-  final Meal meal;
+  final Meal
+      meal; // The meal is recovered thanks to parameter of DetailScreen Class
 
   @override
   Widget build(BuildContext context) {
@@ -39,8 +40,8 @@ class DetailScreen extends StatelessWidget {
             ),
             Expanded(
               child: FutureBuilder<List<MealHasIngredient>>(
-                  future: MealDBHelper.instance
-                      .getMealHasIngredientWithMealId(meal.mealID),
+                  future: MealDBHelper.instance.getMealHasIngredientWithMealId(meal
+                      .mealID), // Get List of Ingredient thanks to the ralationship
                   builder: (context, snapshot) {
                     if (snapshot.hasData) {
                       return ListView.builder(

@@ -2,12 +2,14 @@ import 'package:mealweek/models/ingredient.dart';
 import 'package:mealweek/models/meal.dart';
 import 'package:mealweek/models/unit.dart';
 
+/// MealHasIngredient Model
 class MealHasIngredient {
   final Meal meal;
   final Ingredient ingredient;
   final int quantity;
   final Unit unit;
 
+  /// Constructor for MealHasIngredient Class
   MealHasIngredient({
     required this.meal,
     required this.ingredient,
@@ -15,6 +17,10 @@ class MealHasIngredient {
     required this.unit,
   });
 
+  /// Convert the object instance to map
+  ///
+  /// We just need to map the differents [ID] on Many-to-Many relationship
+  ///
   Map<String, dynamic> toMap() {
     return {
       "mealID": meal.mealID,
@@ -24,6 +30,10 @@ class MealHasIngredient {
     };
   }
 
+  /// Convert MealHasIngredient Map to MealHasIngredient Object
+  ///
+  /// See the map format on MealDBHelper. Each information of each object are
+  /// given in this map. So we can instantiate the different object
   factory MealHasIngredient.fromMap(Map<String, dynamic> map) {
     return MealHasIngredient(
       meal: Meal(

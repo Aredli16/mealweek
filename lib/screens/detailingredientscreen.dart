@@ -5,7 +5,8 @@ class DetailIngredientScreen extends StatelessWidget {
   const DetailIngredientScreen({Key? key, required this.mealHasIngredient})
       : super(key: key);
 
-  final MealHasIngredient mealHasIngredient;
+  final MealHasIngredient
+      mealHasIngredient; // Relation is recovered thanks to DetailIngredientScreen class
 
   @override
   Widget build(BuildContext context) {

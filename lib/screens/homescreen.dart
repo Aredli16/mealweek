@@ -14,7 +14,8 @@ class HomeScreen extends StatelessWidget {
         title: const Text("MealWeek"),
       ),
       body: FutureBuilder<List<Meal>>(
-          future: MealDBHelper.instance.getMeals(),
+          future:
+              MealDBHelper.instance.getMeals(), // Get all Meals from database
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               return ListView.builder(

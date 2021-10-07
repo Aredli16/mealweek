@@ -1,3 +1,4 @@
+import 'package:diacritic/diacritic.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -118,18 +119,21 @@ class _AddScreenState extends State<AddScreen> {
   void _validate() async {
     if (_formKey.currentState!.validate()) {
       // Data are correct
-      Meal meal = Meal(mealName: mealName);
+      Meal meal = Meal(
+          mealName: removeDiacritics(mealName
+              .trim())); // Trim remove inutile begin or end spaces // removeDiacritics remove all accent
       int mealID = await MealDBHelper.instance
           .insertMeal(meal); // Insert MEAL into database
 
       for (var ingredientField in ingredientField) {
         // Route of each ingredient field
         Ingredient ingredient = Ingredient(
-            ingredientName: ingredientField._ingredientController
-                .text); // Retrieve text thanks to controller
+            ingredientName: removeDiacritics(ingredientField
+                ._ingredientController.text
+                .trim())); // Retrieve text thanks to controller
         Unit unit = Unit(
-            unitType: ingredientField
-                ._unitController.text); // Retrieve text thanks to controller
+            unitType: removeDiacritics(ingredientField._unitController.text
+                .trim())); // Retrieve text thanks to controller
 
         // Insert INGREDIENT + UNIT into database
         int ingredientID =

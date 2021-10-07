@@ -64,7 +64,8 @@ class DetailScreen extends StatelessWidget {
                                   ),
                                 ),
                                 title: Text(snapshot
-                                    .data![index].ingredient.ingredientName),
+                                    .data![index].ingredient.ingredientName
+                                    .toUpperCase()),
                                 subtitle: Text("Quantité: " +
                                     snapshot.data![index].quantity.toString() +
                                     " " +

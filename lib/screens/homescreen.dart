@@ -3,6 +3,7 @@ import 'package:mealweek/databases/mealdbhelper.dart';
 import 'package:mealweek/models/meal.dart';
 import 'package:mealweek/screens/add_screen.dart';
 import 'package:mealweek/screens/detailscreen.dart';
+import 'package:sqlite_viewer/sqlite_viewer.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -12,6 +13,15 @@ class HomeScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text("MealWeek"),
+        actions: [
+          IconButton(
+              onPressed: () {
+                Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => const DatabaseList(),
+                ));
+              },
+              icon: const Icon(Icons.code))
+        ],
       ),
       body: FutureBuilder<List<Meal>>(
           future:

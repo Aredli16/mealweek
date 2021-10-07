@@ -1,71 +1,48 @@
 import 'package:flutter/material.dart';
-import 'package:mealweek/databases/mealdbhelper.dart';
-import 'package:mealweek/models/meal.dart';
-import 'package:mealweek/screens/add_screen.dart';
-import 'package:mealweek/screens/detailscreen.dart';
-import 'package:sqlite_viewer/sqlite_viewer.dart';
+import 'package:mealweek/screens/generatescreen.dart';
+import 'package:mealweek/screens/listscreen.dart';
+import 'package:water_drop_nav_bar/water_drop_nav_bar.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
+
+  @override
+  _HomeScreenState createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  int _selectedItem = 0;
+  List<Widget> screens = [
+    const ListScreen(),
+    const GenerateScreen(),
+  ];
+
+  void _itemSelected(int i) {
+    setState(() {
+      _selectedItem = i;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("MealWeek"),
-        actions: [
-          IconButton(
-              onPressed: () {
-                Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => const DatabaseList(),
-                ));
-              },
-              icon: const Icon(Icons.code))
+      body: screens.elementAt(_selectedItem),
+      bottomNavigationBar: WaterDropNavBar(
+        waterDropColor: Colors.green,
+        inactiveIconColor: Colors.green[300],
+        bottomPadding: 10,
+        barItems: [
+          BarItem(
+            filledIcon: Icons.view_list_outlined,
+            outlinedIcon: Icons.view_list,
+          ),
+          BarItem(
+            filledIcon: Icons.replay_circle_filled_rounded,
+            outlinedIcon: Icons.replay,
+          ),
         ],
-      ),
-      body: FutureBuilder<List<Meal>>(
-          future:
-              MealDBHelper.instance.getMeals(), // Get all Meals from database
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              return ListView.builder(
-                itemCount: snapshot.data!.length,
-                itemBuilder: (context, index) {
-                  return Card(
-                    margin: const EdgeInsets.all(10),
-                    child: InkWell(
-                      onTap: () => Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) =>
-                              DetailScreen(meal: snapshot.data![index]))),
-                      child: ListTile(
-                        title:
-                            Text(snapshot.data![index].mealName.toUpperCase()),
-                        leading: Hero(
-                          tag: snapshot.data![index],
-                          child: Image.asset(
-                            "assets/icons/lunch.png",
-                            height: 30,
-                          ),
-                        ),
-                        trailing: const IconButton(
-                          onPressed: null,
-                          icon: Icon(Icons.more_vert),
-                        ),
-                      ),
-                    ),
-                  );
-                },
-              );
-            } else if (snapshot.hasError) {
-              return Center(child: Text(snapshot.error.toString()));
-            } else {
-              return const Center(child: CircularProgressIndicator());
-            }
-          }),
-      floatingActionButton: FloatingActionButton(
-        child: const Icon(Icons.add),
-        onPressed: () => Navigator.of(context)
-            .push(MaterialPageRoute(builder: (context) => const AddScreen())),
+        selectedIndex: _selectedItem,
+        onItemSelected: _itemSelected,
       ),
     );
   }

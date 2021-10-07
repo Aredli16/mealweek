@@ -354,15 +354,12 @@ class MealDBHelper {
       SELECT 
 	      *
       FROM 
-	      meal, 
-        ingredient, 
-        meal_has_ingredient,
-        unit
+        meal_has_ingredient
+	      JOIN meal USING(mealID) 
+        JOIN ingredient USING(ingredientID)
+        JOIN unit USING(unitID)
       WHERE 
 	      meal.mealID = ? 
-        AND meal.mealID = meal_has_ingredient.mealID 
-        AND ingredient.ingredientID = meal_has_ingredient.ingredientID
-        AND unit.unitID = meal_has_ingredient.unitID
     """, [mealID]);
     return List.generate(
         response.length, (index) => MealHasIngredient.fromMap(response[index]));

@@ -41,4 +41,11 @@ class Meal {
   String toString() {
     return "Meal(mealID: $mealID / mealName: $mealName)";
   }
+
+  @override
+  bool operator ==(Object other) => other is Meal && mealID == other.mealID;
+
+  @override
+  // ignore: unnecessary_overrides
+  int get hashCode => super.hashCode;
 }

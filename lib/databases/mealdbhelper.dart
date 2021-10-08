@@ -364,4 +364,19 @@ class MealDBHelper {
     return List.generate(
         response.length, (index) => MealHasIngredient.fromMap(response[index]));
   }
+
+  /// Return 1 random meal from the table meal
+  ///
+  /// ```
+  ///   MealDBHelper.instance.getRandomMeal();
+  /// ```
+  Future<Meal> getRandomMeal() async {
+    final Database db = await database;
+    List<Map<String, dynamic>> response = await db.query(
+      "meal",
+      orderBy: "RANDOM()",
+      limit: 1,
+    );
+    return Meal.fromMap(response[0]);
+  }
 }

@@ -44,7 +44,7 @@ class ListScreen extends StatelessWidget {
                           tag: snapshot.data![index],
                           child: Image.asset(
                             "assets/icons/lunch.png",
-                            height: 30,
+                            height: 40,
                           ),
                         ),
                         trailing: const IconButton(

@@ -5,8 +5,31 @@ import 'package:mealweek/screens/add_screen.dart';
 import 'package:mealweek/screens/detailscreen.dart';
 import 'package:sqlite_viewer/sqlite_viewer.dart';
 
-class ListScreen extends StatelessWidget {
+class ListScreen extends StatefulWidget {
   const ListScreen({Key? key}) : super(key: key);
+
+  @override
+  State<ListScreen> createState() => _ListScreenState();
+}
+
+class _ListScreenState extends State<ListScreen> {
+  late Future<List<Meal>> futureListMeal;
+
+  @override
+  void initState() {
+    super.initState();
+    futureListMeal = updateAndGetList();
+  }
+
+  Future<List<Meal>> updateAndGetList() async {
+    List<Meal> mealList =
+        await MealDBHelper.instance.getMeals("meal"); // Fetching data
+    if (mealList.isEmpty) {
+      // No data => new database
+      await MealDBHelper.instance.getDefaultMeal(); // Add default data
+    }
+    return MealDBHelper.instance.getMeals("meal"); // Refetching data
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -24,8 +47,7 @@ class ListScreen extends StatelessWidget {
         ],
       ),
       body: FutureBuilder<List<Meal>>(
-          future: MealDBHelper.instance
-              .getMeals("meal"), // Get all Meals from database
+          future: futureListMeal,
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               return ListView.builder(

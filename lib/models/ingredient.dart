@@ -37,6 +37,17 @@ class Ingredient {
     );
   }
 
+  /// Constructor for Ingredient Class
+  ///
+  /// Return a `Ingredient` from a json file.
+  ///
+  /// [ingredientID] is not specified because database will return an id
+  factory Ingredient.fromJson(Map<String, dynamic> json) {
+    return Ingredient(
+      ingredientName: json["ingredientName"],
+    );
+  }
+
   @override
   String toString() {
     return "Ingredient(ingredientID: $ingredientID / ingredientName: $ingredientName)";

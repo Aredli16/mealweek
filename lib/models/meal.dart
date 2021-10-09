@@ -37,6 +37,17 @@ class Meal {
     );
   }
 
+  /// Constructor for Meal Class
+  ///
+  /// Return a `Meal`from a json file
+  ///
+  /// [mealId] is not specified because database will give an id
+  factory Meal.fromJson(Map<String, dynamic> json) {
+    return Meal(
+      mealName: json["mealName"],
+    );
+  }
+
   @override
   String toString() {
     return "Meal(mealID: $mealID / mealName: $mealName)";

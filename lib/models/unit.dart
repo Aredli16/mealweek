@@ -28,7 +28,21 @@ class Unit {
   ///
   /// [unitID] is specified because it's returned by database
   factory Unit.fromMap(Map<String, dynamic> map) {
-    return Unit(unitID: map["unitID"], unitType: map["unitType"]);
+    return Unit(
+      unitID: map["unitID"],
+      unitType: map["unitType"],
+    );
+  }
+
+  /// Constructor for Unit Class
+  ///
+  /// Return a `Unit` from a json file.
+  ///
+  /// [unitID] is not specified because database will return an id
+  factory Unit.fromJson(Map<String, dynamic> map) {
+    return Unit(
+      unitType: map["unit"],
+    );
   }
 
   @override

@@ -1,3 +1,6 @@
+import 'dart:convert';
+
+import 'package:flutter/services.dart';
 import 'package:mealweek/models/ingredient.dart';
 import 'package:mealweek/models/meal.dart';
 import 'package:mealweek/models/mealhasingredient.dart';
@@ -105,6 +108,26 @@ class MealDBHelper {
   /// Configure the foreign key.
   Future<void> _onConfigureDB(Database database) async {
     await database.execute('PRAGMA foreign_keys = ON');
+  }
+
+  /// Inserting default meal
+  ///
+  /// Assets: assets/data.json
+  Future<void> getDefaultMeal() async {
+    String data = await rootBundle.loadString("assets/data.json");
+    List<dynamic> meals = jsonDecode(data);
+    for (var meal in meals) {
+      Meal jsonMeal = Meal.fromJson(meal);
+      int idJsonMeal = await insertMeal(jsonMeal);
+      for (var ing in meal["ingredient"]) {
+        Ingredient jsonIng = Ingredient.fromJson(ing);
+        int idJsonIng = await insertIngredient(jsonIng);
+        Unit jsonUnit = Unit.fromJson(ing);
+        int idJsonUnit = await insertUnit(jsonUnit);
+        await insertMealHasIngredientManual(
+            idJsonMeal, idJsonIng, idJsonUnit, ing["quantity"]);
+      }
+    }
   }
 
   /// Insert a [Meal].

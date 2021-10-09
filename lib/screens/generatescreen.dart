@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mealweek/databases/mealdbhelper.dart';
 import 'package:mealweek/models/meal.dart';
+import 'package:mealweek/screens/detailscreen.dart';
 
 class GenerateScreen extends StatefulWidget {
   const GenerateScreen({Key? key}) : super(key: key);
@@ -72,15 +73,23 @@ class _GenerateScreenState extends State<GenerateScreen> {
 
   Card buildRandomMeal(int index) {
     return Card(
-      child: ListTile(
-        leading: Image.asset(
-          "assets/icons/lunch.png",
-          height: 40,
-        ),
-        title: Text(futureMealList[index].mealName.toUpperCase()),
-        trailing: IconButton(
-          onPressed: () => _refreshOneMeal(index),
-          icon: const Icon(Icons.refresh),
+      child: InkWell(
+        onTap: () => Navigator.of(context).push(MaterialPageRoute(
+          builder: (context) => DetailScreen(meal: futureMealList[index]),
+        )),
+        child: ListTile(
+          leading: Hero(
+            tag: futureMealList[index],
+            child: Image.asset(
+              "assets/icons/lunch.png",
+              height: 40,
+            ),
+          ),
+          title: Text(futureMealList[index].mealName.toUpperCase()),
+          trailing: IconButton(
+            onPressed: () => _refreshOneMeal(index),
+            icon: const Icon(Icons.refresh),
+          ),
         ),
       ),
     );

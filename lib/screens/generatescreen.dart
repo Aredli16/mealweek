@@ -22,6 +22,14 @@ class _GenerateScreenState extends State<GenerateScreen> {
   ];
 
   @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
+      _getInitGeneratedMeal();
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -84,7 +92,7 @@ class _GenerateScreenState extends State<GenerateScreen> {
   ///
   /// MealList must have 7 meal (for 7 days)
   void _generateMealList() async {
-    List<Meal> mealList = await MealDBHelper.instance.getMeals();
+    List<Meal> mealList = await MealDBHelper.instance.getMeals("meal");
     if (mealList.length < 7) {
       // If mealList is not < 7, we can't create a menu
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -104,6 +112,7 @@ class _GenerateScreenState extends State<GenerateScreen> {
     setState(() {
       futureMealList = generatingMealList;
     });
+    await MealDBHelper.instance.insertRandomMeals(futureMealList);
   }
 
   /// This method use to resfresh one meal in the list
@@ -115,6 +124,17 @@ class _GenerateScreenState extends State<GenerateScreen> {
       refreshedMeal = await MealDBHelper.instance.getRandomMeal();
     } while (futureMealList.contains(refreshedMeal));
     futureMealList[index] = refreshedMeal;
+    MealDBHelper.instance.insertRandomMeals(
+        futureMealList); // Update the random meal list in database
     setState(() {});
+  }
+
+  /// Method who get init random meal
+  void _getInitGeneratedMeal() async {
+    List<Meal> initGeneratedMeal =
+        await MealDBHelper.instance.getMeals("meal_random");
+    setState(() {
+      futureMealList = initGeneratedMeal;
+    });
   }
 }

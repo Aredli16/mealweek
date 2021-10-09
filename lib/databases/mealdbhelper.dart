@@ -71,6 +71,12 @@ class MealDBHelper {
       )
       """);
     await db.execute("""
+      CREATE TABLE IF NOT EXISTS meal_random(
+        mealID INTEGER,
+        mealName VARCHAR(50) UNIQUE NOT NULL
+      )
+    """); // No primary key for this table because mealID is also a primary key on table meal
+    await db.execute("""
       CREATE TABLE IF NOT EXISTS ingredient(
 	      ingredientID INTEGER PRIMARY KEY AUTOINCREMENT,
         ingredientName VARCHAR(50) UNIQUE NOT NULL
@@ -122,14 +128,14 @@ class MealDBHelper {
     }
   }
 
-  /// Get all meal of meal table.
+  /// Get all meal of [meal] table. Choose between meal table or meal_random table
   /// ```
   ///     MealDBHelper.instance.getMeals();
   /// ```
   /// Return a [Meal List]
-  Future<List<Meal>> getMeals() async {
+  Future<List<Meal>> getMeals(String table) async {
     final Database db = await database;
-    List<Map<String, dynamic>> response = await db.query("meal");
+    List<Map<String, dynamic>> response = await db.query(table);
     return List.generate(
         response.length, (index) => Meal.fromMap(response[index]));
   }
@@ -378,5 +384,19 @@ class MealDBHelper {
       limit: 1,
     );
     return Meal.fromMap(response[0]);
+  }
+
+  /// Insert the random meal list generated
+  ///
+  /// ```
+  ///     MealDBHelper.instance.insertRandomMeals(mealsRandom);
+  /// ```
+  Future<void> insertRandomMeals(List<Meal> randomMeals) async {
+    final Database db = await database;
+    db.delete("meal_random");
+    for (var meal in randomMeals) {
+      db.insert(
+          "meal_random", {"mealID": meal.mealID, "mealName": meal.mealName});
+    }
   }
 }

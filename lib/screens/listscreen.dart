@@ -24,8 +24,8 @@ class ListScreen extends StatelessWidget {
         ],
       ),
       body: FutureBuilder<List<Meal>>(
-          future:
-              MealDBHelper.instance.getMeals(), // Get all Meals from database
+          future: MealDBHelper.instance
+              .getMeals("meal"), // Get all Meals from database
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               return ListView.builder(

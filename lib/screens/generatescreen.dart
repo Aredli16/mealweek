@@ -39,7 +39,7 @@ class _GenerateScreenState extends State<GenerateScreen> {
               onPressed: _generateMealList, icon: const Icon(Icons.replay)),
         ],
       ),
-      body: futureMealList.isEmpty
+      body: futureMealList.isEmpty || futureMealList.length < 7
           ? Center(
               child: TextButton(
                 onPressed: _generateMealList,

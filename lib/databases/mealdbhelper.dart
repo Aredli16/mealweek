@@ -363,6 +363,22 @@ class MealDBHelper {
     }
   }
 
+  /// Delete the relation ship where [mealID] are the same in the table
+  /// ```
+  ///     MealDBHelper.instance.deleteMealHasIngredientWithMealId(mealID);
+  /// ```
+  ///
+  /// This method delete the meal name too
+  ///
+  /// Need to delete meal in random_meal too
+  Future<void> deleteMealHasIngredientWithMealId(int mealId) async {
+    final Database db = await database;
+    await db.delete("meal_has_ingredient",
+        where: "mealID = ?", whereArgs: [mealId]);
+    await db.delete("meal", where: "mealID = ?", whereArgs: [mealId]);
+    await db.delete("meal_random", where: "mealID = ?", whereArgs: [mealId]);
+  }
+
   /// Get the realationship Meal-Ingredient-Unit
   ///
   /// Database will check where [mealID] is equal [mealID] and return one

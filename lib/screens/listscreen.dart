@@ -53,25 +53,56 @@ class _ListScreenState extends State<ListScreen> {
               return ListView.builder(
                 itemCount: snapshot.data!.length,
                 itemBuilder: (context, index) {
-                  return Card(
-                    margin: const EdgeInsets.all(10),
-                    child: InkWell(
-                      onTap: () => Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) =>
-                              DetailScreen(meal: snapshot.data![index]))),
-                      child: ListTile(
-                        title:
-                            Text(snapshot.data![index].mealName.toUpperCase()),
-                        leading: Hero(
-                          tag: snapshot.data![index],
-                          child: Image.asset(
-                            "assets/icons/lunch.png",
-                            height: 40,
+                  return Dismissible(
+                    key: Key(snapshot.data![index].toString()),
+                    direction: DismissDirection.endToStart,
+                    onDismissed: (direction) async {
+                      if (direction == DismissDirection.endToStart) {
+                        await MealDBHelper.instance
+                            .deleteMealHasIngredientWithMealId(
+                                snapshot.data![index].mealID);
+                        snapshot.data!.removeAt(index);
+                        setState(() {});
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text("[" +
+                                snapshot.data![index].mealName +
+                                "]" +
+                                " a été supprimé"),
                           ),
-                        ),
-                        trailing: const IconButton(
-                          onPressed: null,
-                          icon: Icon(Icons.more_vert),
+                        );
+                      }
+                    },
+                    background: Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Container(
+                        alignment: Alignment.centerRight,
+                        padding: const EdgeInsets.only(right: 20.0),
+                        color: Colors.red,
+                        child: const Icon(Icons.delete),
+                      ),
+                    ),
+                    child: Card(
+                      margin: const EdgeInsets.all(10),
+                      child: InkWell(
+                        onTap: () => Navigator.of(context).push(
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    DetailScreen(meal: snapshot.data![index]))),
+                        child: ListTile(
+                          title: Text(
+                              snapshot.data![index].mealName.toUpperCase()),
+                          leading: Hero(
+                            tag: snapshot.data![index],
+                            child: Image.asset(
+                              "assets/icons/lunch.png",
+                              height: 40,
+                            ),
+                          ),
+                          trailing: const IconButton(
+                            onPressed: null,
+                            icon: Icon(Icons.more_vert),
+                          ),
                         ),
                       ),
                     ),

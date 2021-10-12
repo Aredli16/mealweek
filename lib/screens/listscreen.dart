@@ -57,19 +57,14 @@ class _ListScreenState extends State<ListScreen> {
                     direction: DismissDirection.endToStart,
                     onDismissed: (direction) async {
                       if (direction == DismissDirection.endToStart) {
-                        await MealDBHelper.instance
-                            .deleteMealHasIngredientWithMealId(
-                                snapshot.data![index].mealID);
-                        snapshot.data!.removeAt(index);
-                        setState(() {});
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text("[" +
-                                snapshot.data![index].mealName +
-                                "]" +
-                                " a été supprimé"),
+                        _deleteMeal(
+                          Meal(
+                            mealID: snapshot.data![index].mealID,
+                            mealName: snapshot.data![index].mealName,
                           ),
                         );
+                        snapshot.data!.removeAt(index);
+                        setState(() {});
                       }
                     },
                     background: Padding(
@@ -89,20 +84,42 @@ class _ListScreenState extends State<ListScreen> {
                                 builder: (context) =>
                                     DetailScreen(meal: snapshot.data![index]))),
                         child: ListTile(
-                          title: Text(
-                              snapshot.data![index].mealName.toUpperCase()),
-                          leading: Hero(
-                            tag: snapshot.data![index],
-                            child: Image.asset(
-                              "assets/icons/lunch.png",
-                              height: 40,
+                            title: Text(
+                                snapshot.data![index].mealName.toUpperCase()),
+                            leading: Hero(
+                              tag: snapshot.data![index],
+                              child: Image.asset(
+                                "assets/icons/lunch.png",
+                                height: 40,
+                              ),
                             ),
-                          ),
-                          trailing: const IconButton(
-                            onPressed: null,
-                            icon: Icon(Icons.more_vert),
-                          ),
-                        ),
+                            trailing: PopupMenuButton(
+                              iconSize: 50,
+                              itemBuilder: (BuildContext context) {
+                                return [
+                                  PopupMenuItem(
+                                    onTap: () async {
+                                      _deleteMeal(
+                                        Meal(
+                                          mealID: snapshot.data![index].mealID,
+                                          mealName:
+                                              snapshot.data![index].mealName,
+                                        ),
+                                      );
+                                      snapshot.data!.removeAt(index);
+                                      setState(() {});
+                                    },
+                                    child: Text(
+                                      "Supprimer".toUpperCase(),
+                                      style: const TextStyle(
+                                        color: Colors.red,
+                                      ),
+                                    ),
+                                  )
+                                ];
+                              },
+                              child: const Icon(Icons.more_vert),
+                            )),
                       ),
                     ),
                   );
@@ -118,7 +135,7 @@ class _ListScreenState extends State<ListScreen> {
                     CircularProgressIndicator(),
                     Padding(
                       padding: EdgeInsets.all(15.0),
-                      child: Text("Récupération de vos recettes de bases..."),
+                      child: Text("Récupération de vos recettes..."),
                     ),
                   ],
                 ),
@@ -129,6 +146,19 @@ class _ListScreenState extends State<ListScreen> {
         child: const Icon(Icons.add),
         onPressed: () => Navigator.of(context)
             .push(MaterialPageRoute(builder: (context) => const AddScreen())),
+      ),
+    );
+  }
+
+  /// Delete the meal in the database
+  ///
+  /// Show snackbar confirmation
+  void _deleteMeal(Meal meal) async {
+    await MealDBHelper.instance.deleteMealHasIngredientWithMealId(meal.mealID);
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text("[" + meal.mealName + "]" + " a été supprimé"),
       ),
     );
   }

@@ -111,7 +111,15 @@ class _ListScreenState extends State<ListScreen> {
             } else if (snapshot.hasError) {
               return Center(child: Text(snapshot.error.toString()));
             } else {
-              return const Center(child: CircularProgressIndicator());
+              return Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: const [
+                    CircularProgressIndicator(),
+                    Text("Récupération de vos recettes de bases..."),
+                  ],
+                ),
+              );
             }
           }),
       floatingActionButton: FloatingActionButton(

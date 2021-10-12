@@ -116,7 +116,10 @@ class _ListScreenState extends State<ListScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: const [
                     CircularProgressIndicator(),
-                    Text("Récupération de vos recettes de bases..."),
+                    Padding(
+                      padding: EdgeInsets.all(15.0),
+                      child: Text("Récupération de vos recettes de bases..."),
+                    ),
                   ],
                 ),
               );

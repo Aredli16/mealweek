@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.mealweek">
+    package="fr.aredli.mealweek">
    <application
         android:label="mealweek"
         android:icon="@mipmap/ic_launcher">

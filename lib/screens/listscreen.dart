@@ -3,7 +3,6 @@ import 'package:mealweek/databases/mealdbhelper.dart';
 import 'package:mealweek/models/meal.dart';
 import 'package:mealweek/screens/add_screen.dart';
 import 'package:mealweek/screens/detailscreen.dart';
-import 'package:sqlite_viewer/sqlite_viewer.dart';
 
 class ListScreen extends StatefulWidget {
   const ListScreen({Key? key}) : super(key: key);
@@ -36,15 +35,15 @@ class _ListScreenState extends State<ListScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Liste de mes repas"),
-        actions: [
-          IconButton(
-              onPressed: () {
-                Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => const DatabaseList(),
-                ));
-              },
-              icon: const Icon(Icons.code))
-        ],
+        // actions: [
+        //   IconButton(
+        //       onPressed: () {
+        //         Navigator.of(context).push(MaterialPageRoute(
+        //           builder: (context) => const DatabaseList(),
+        //         ));
+        //       },
+        //       icon: const Icon(Icons.code))
+        // ],
       ),
       body: FutureBuilder<List<Meal>>(
           future: futureListMeal,

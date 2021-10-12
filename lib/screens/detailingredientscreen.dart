@@ -31,6 +31,7 @@ class DetailIngredientScreen extends StatelessWidget {
               padding: const EdgeInsets.all(15.0),
               child: Text(
                 mealHasIngredient.ingredient.ingredientName.toUpperCase(),
+                textAlign: TextAlign.center,
                 style: const TextStyle(fontSize: 30),
               ),
             ),

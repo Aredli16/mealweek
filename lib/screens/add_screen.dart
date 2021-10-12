@@ -107,6 +107,9 @@ class _AddScreenState extends State<AddScreen> {
   /// The button is on the NewIngredientField Class, so need to pass this method
   /// into NewIngredientField Constructor
   void _deleteField(NewIngredientField ingredientFieldDelete) {
+    if (ingredientField.length == 1) {
+      return;
+    }
     ingredientField.remove(ingredientFieldDelete);
     setState(() {});
   }
@@ -179,7 +182,7 @@ class NewIngredientField extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.end,
       children: [
         Expanded(
-          flex: 3,
+          flex: 2,
           child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: TextFormField(
@@ -199,7 +202,7 @@ class NewIngredientField extends StatelessWidget {
           ),
         ),
         Expanded(
-          flex: 2,
+          flex: 1,
           child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: TextFormField(
